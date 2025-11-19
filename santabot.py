@@ -25,8 +25,8 @@ except ImportError:
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 					level=logging.INFO)
 
-logger = logging.getLogger(__name__) # i.e le logger va afficher de quel fichier du package
-DEBUG = True # if True, accepte des demandes à des moments random
+logger = logging.getLogger(__name__) # i.e logger displays which file the package contains
+DEBUG = True # if True, accept requests at random time
 MONTH = 12
 config_file_name = "config.ini" # super original hein
 
@@ -46,8 +46,8 @@ def init_api():
 
 ########### FUNCTIONS ######## 
 
-"""Öffnen Sie die Konfigurationsdatei und lesen Sie den Tipp in der Kategorie, das ist in Ordnung
-   chat_id muss eine Zeichenfolge sein
+"""open config file and read tip in the right category
+   chat_id has to be numeric
 """
 def read_config(section,key):
 	config=configparser.ConfigParser()
@@ -70,7 +70,7 @@ async def tip(update, context):
 	tip = str(update.message.text)[5:]
 	if(tip):
 		# update.message.reply_text("Dein Tipp ist: " + tip)
-		await send_message(update, "Dein Tipp ist: " + tip)
+		await send_message(update, "Your Tip is: " + tip)
 		await notify(tip, update, context)
 	else:
 		# update.message.reply_markdown_v2(read_config("CONFIG","tip"))
@@ -90,12 +90,12 @@ async def approve(update,context):
 			config2.write(submissionsfile)
 		logger.info("user : "+str(update.message.from_user.first_name)+" added tip : "+tip)
 		# update.message.reply_text("hinzugefügt")
-		await send_message(update, "hinzugefügt")
+		await send_message(update, "added")
 
 
 async def notify(tip, update, context):
-	"""Eine Nachricht an den Eigentümer mit /tip <nachricht>
-		PROPRIO ist die Chat-ID vom Eigentümer
+	"""Message to the owner with /tip <message>
+		PROPRIO is Chat-ID of owner
 	"""
 	notification = "Tip de "+str(update.message.from_user.first_name)+" (id:"+str(update.message.from_user.id)+")"
 	notified_id = int(read_config("API", "PROPRIO"))
@@ -103,7 +103,7 @@ async def notify(tip, update, context):
 	message = context.bot.send_message(chat_id=notified_id, text=tip)
 
 
-"""gibt den Tag zurück, wenn er im Dezember (oder im Monat MONAT) zwischen 9 und 11 Uhr liegt"""
+"""return of the day if it's in december (or in month MONAT) between START_TIME and STOP_TIME"""
 def is_time_ok(date):
 	if(date.month == MONTH or DEBUG):
 		if(date.hour >= START_TIME and date.hour <= STOP_TIME or DEBUG):
@@ -126,8 +126,8 @@ async def open_day(update,context):
 		logger.info(update.message.from_user.username)
 		# update.message.reply_text(read_config("CONFIG","opentext")+" "+str(update.message.from_user.first_name))
 		await send_message(update, read_config("CONFIG","opentext"))
-		array = json.loads(read_config(chat,"messages")) # -1 vu que l'array, contrairement au mois, commence à zéro
-		tip = array[day-1]
+		array = json.loads(read_config(chat,"messages")) 
+		tip = array[day-1] # -1 because array, in contrast to Month, starts with zero
 		logger.info(tip)
 		await send_message(update, tip)
 
