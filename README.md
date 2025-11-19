@@ -1,4 +1,4 @@
-# SanTelegram Bot
+# Telegram Bot
 
 ## installation
 
@@ -6,16 +6,16 @@
 pip install python-telegram-bot
 pip install telethon
 pip install configparser logging
-git clone https://github.com/RduMarais/santelegram.git
+git clone https://github.com/Yecamo/santelegram.git
 ```
 
 ## usage : 
 
-> I did a *huge* tutorial for beginners (in French) on my personal blog and here : https://github.com/RduMarais/santelegram/blob/master/Tutoriel.md
+> RDumarais did a *huge* tutorial for beginners (in French) on his personal blog and here : https://github.com/RduMarais/santelegram/blob/master/Tutoriel.md It is pretty outdated but can be useful for understanding what the original bot does and why.
 
  * Change the **config_example.ini** file name to **config.ini**
  * Write in it the Advent Calendar you want, with the usernames you want to be able to open.
- * get the usernames with telethon_get_users.py
+ * get the usernames with telethon_get_users.py (or just look them up with one of the methods mentioned below)
  * put your API token in the config.ini
  * run 
 
