@@ -35,6 +35,15 @@ DEBUG = True # if True, accept requests at random time
 MONTH = 12
 config_file_name = "config.ini" # super original hein
 
+# Global variable to track whether the message has been sent today
+has_sent_message_today = False
+last_sent_date = None
+
+async def auto_send(context):
+    global has_sent_message_today
+    global last_sent_date
+
+    current_date = datetime.now().date()
 
 ## READ config file and set Auth variables
 def init_api():
@@ -66,6 +75,21 @@ async def start(update, context):
 	"""Send a message when the command /start is issued."""
 	await send_message(update, read_config("CONFIG", "starttext"))
 
+def get_last_sent_date(): # This function was structured with assistance from OpenAI's ChatGPT
+    config = configparser.ConfigParser()
+    config.read(config_file_name)
+    last_date_str = config.get('CONFIG', 'LAST_SENT_DATE', fallback=None)
+    if last_date_str:
+        return datetime.fromisoformat(last_date_str)  # Convert string to a datetime object
+    return None
+
+def save_last_sent_date(date): # This function was structured with assistance from OpenAI's ChatGPT
+    config = configparser.ConfigParser()
+    config.read(config_file_name)
+    config['CONFIG']['LAST_SENT_DATE'] = date.isoformat() # Update the LAST_SENT_DATE value
+    with open(config_file_name, 'w') as configfile:
+        config.write(configfile)
+
 """return of the day if it's in december (or in month MONAT) between START_TIME and STOP_TIME"""
 def is_time_ok(date):
 	if(date.month == MONTH or DEBUG):
@@ -77,7 +101,6 @@ def is_time_ok(date):
 		return False
 
 async def open_day(update,context):
-	"""Sends a tip if and only if the right sender issues /open"""
 	# logger.info(update)
 	chat = "MACONV"
 	# logger.info("chat : "+chat)
@@ -131,7 +154,41 @@ async def error(update, context):
 	"""Log Errors caused by Updates."""
 	logger.warning('Update "%s" caused error "%s"', update, context.error)
 
+async def send_message_to_user(context, user_id, username, message): # This function was structured with assistance from OpenAI's ChatGPT
+    logger.info("Sending message to user ID: %s (%s) with message: %s", user_id, username, message)
+    try:
+        await context.bot.send_message(chat_id=user_id, text=message)
+    except Exception as e:
+        logger.error("Failed to send message to user ID %s (%s): %s", user_id, username, str(e))
 
+async def auto_send(context):  # This function was structured with assistance from OpenAI's ChatGPT
+    global has_sent_message_today
+    global last_sent_date
+    current_date = datetime.now()
+    last_sent_date = get_last_sent_date()   # Get the last sent date from the config
+    print("Current Date:", current_date.date())
+    print("Last Sent Date:", last_sent_date)
+    if last_sent_date is None or last_sent_date.date() != current_date.date(): # Allow sending if no message has been sent today or if last sent date is not set
+        has_sent_message_today = False  
+    else:
+        has_sent_message_today = True  # Message has already been sent today
+    if has_sent_message_today and not DEBUG:  # Checking for DEBUG mode
+        print("Message already sent today; skipping.")
+        return  # Exit early since we already sent the message
+    print("Sending messages...")
+    messages = json.loads(read_config("MACONV", "messages"))
+    users = json.loads(read_config("MACONV", "users"))
+    current_day = current_date.day   # Get the message(s) for the current day
+    if current_day <= len(messages):   # Check if the current day index exists in the messages
+        daily_messages = messages[current_day - 1]  # Get all messages for the current day
+        for user in users:
+            user_id = user["id"]
+            username = user["username"]
+            for message in daily_messages:  # Loop through each message for the day
+                await send_message_to_user(context, user_id, username, message)
+        has_sent_message_today = True  # Mark as sent
+        save_last_sent_date(current_date)  # Persist the last sent date
+    print("All messages sent successfully. Last sent date updated.")
 
 ######## MAIN #######
 
