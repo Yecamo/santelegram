@@ -33,3 +33,6 @@ Enjoy
  * API python : https://python-telegram-bot.readthedocs.io/en/stable/telegram.chat.html#telegram.Chat
  * get chat ID : https://www.wikihow.com/Know-Chat-ID-on-Telegram-on-Android
  	 * mieux https://www.wikihow.com/Know-a-Chat-ID-on-Telegram-on-PC-or-Mac
+   * in Mercurygram (fork of Telegram for Android) you can look up the IDs on the info pop-up of chats and groups: https://github.com/Mercurygram/Mercurygram
+   * on Telegram Web you can move your cursor over chats; after a while there will appear a small window with the chat ID
+   * there are also a few Telegram bots who fetch the user IDs for you, like @userinfobot
