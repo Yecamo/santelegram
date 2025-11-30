@@ -200,7 +200,7 @@ def main():
 
 	application = Application.builder().token(API_KEY).build()
 
-	application.add_handler(CommandHandler("start", start))
+	application.job_queue.run_once(auto_send, 30)
 
 	# updater = Updater(API_KEY)
 
