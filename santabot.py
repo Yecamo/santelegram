@@ -110,8 +110,9 @@ async def open_day(update,context):
 		authorized_users = json.loads(read_config(chat,"users"))
 		logger.info("users : "+str(authorized_users)+" , open request from : "+str(update.message.from_user.id)+":"+update.message.from_user.first_name)
 		logger.info(update.message.from_user.username)
-		if(update.message.from_user.id in authorized_users):
+		if str(update.message.from_user.id in authorized_users):
 			# update.message.reply_text(read_config("CONFIG","opentext")+" "+str(update.message.from_user.first_name))
+			print("user authorized")
 			await send_message(update, read_config("CONFIG","opentext"))
 			array = json.loads(read_config(chat,"messages")) # -1 because array, in contrast to Month, starts with zero
 			tip = array[day-1]
