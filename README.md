@@ -36,3 +36,18 @@ Enjoy
    * in Mercurygram (fork of Telegram for Android) you can look up the IDs on the info pop-up of chats and groups: https://github.com/Mercurygram/Mercurygram
    * on Telegram Web you can move your cursor over chats; after a while it appears a small window with the chat ID
    * there are also a few Telegram bots who fetch the user IDs for you, like @userinfobot
+
+# AI-assisted changes and transparency :
+
+Some edits in this repository were created or refactored with assistance from an AI (OpenAI ChatGPT). We document these edits here to maintain transparency and make it easy for reviewers to find and evaluate AI-assisted code.
+
+What "AI-assisted" means
+- "AI-assisted" indicates that an AI model helped structure, suggest, or refactor parts of the code. Human maintainers reviewed and committed the changes.
+- The repository does not delegate acceptance of changes to the AI — human reviewers are responsible for validating behavior, style, and security.
+
+How AI-assisted edits are marked in the code
+- AI-assisted functions or sections include in-code comments such as:
+  - # This function was structured with assistance from OpenAI's ChatGPT
+  - or the recommended short marker:
+    - # AI-ASSISTED: structured with OpenAI ChatGPT (YYYY-MM-DD) — brief note of why changed
+- These markers make it simple to search the codebase for AI-assisted changes.
